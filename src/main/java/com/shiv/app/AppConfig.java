@@ -3,6 +3,8 @@ package com.shiv.app;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.swing.UIManager;
+
 public class AppConfig{
     @Getter
     private String mongodbUri;
@@ -16,6 +18,8 @@ public class AppConfig{
     private String databaseName;
     @Getter
     private String collectionName;
+    @Getter
+    private String lookAndFeel;
 
     private static AppConfig appConfig = null;
 
@@ -23,6 +27,8 @@ public class AppConfig{
         mongodbUri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1";
         databaseName = "local";
         collectionName = "quiz";
+        lookAndFeel = UIManager.getSystemLookAndFeelClassName();
+        System.out.println(lookAndFeel);
     }
 
     public static AppConfig getAppConfig(){

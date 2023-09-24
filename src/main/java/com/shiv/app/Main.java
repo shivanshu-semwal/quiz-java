@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import com.shiv.app.gui.HomeScreen;
 import com.shiv.app.gui.LookAndFeelManager;
+import com.shiv.app.AppConfig;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,7 +20,12 @@ public class Main {
         HomeScreen homeScreen = new HomeScreen();
         homeScreen.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         homeScreen.getFrame().setSize(400, 300);
-        homeScreen.getMenuBar().add(LookAndFeelManager.getLookAndFeelMenuItem(homeScreen.getFrame()));
+        try {
+            UIManager.setLookAndFeel(AppConfig.getAppConfig().getLookAndFeel());
+            SwingUtilities.updateComponentTreeUI(homeScreen.getFrame());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
+        }
         homeScreen.getFrame().setVisible(true);
     }
 }

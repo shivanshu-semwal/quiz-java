@@ -32,6 +32,7 @@ public class LookAndFeelManager{
     public static JMenu getLookAndFeelMenuItem(JFrame frame){
         JMenu lookAndFeelMenu = new JMenu("Look and Feel");
         UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
+        System.out.println(lookAndFeelInfos);
         for (UIManager.LookAndFeelInfo info : lookAndFeelInfos) {
             JMenuItem menuItem = new JMenuItem(info.getName());
             menuItem.addActionListener(new LookAndFeelActionListener(info.getClassName(), frame));
