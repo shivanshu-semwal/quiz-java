@@ -1,4 +1,4 @@
-package com.shiv.app;
+package com.shiv.app.gui;
 
 import javax.swing.*;
 import java.awt.event.*;

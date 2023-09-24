@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import com.shiv.app.gui.HomeScreen;
+
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -13,29 +15,20 @@ public class Main {
     }
 
     private static void createAndShowGUI() {
-        JFrame frame = new JFrame("GUI App");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        HomeScreen homeScreen = new HomeScreen();
+        
+        homeScreen.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        homeScreen.getFrame().setSize(400, 300);
 
-        JMenuBar menuBar = new JMenuBar();
         JMenu lookAndFeelMenu = new JMenu("Look and Feel");
-
         UIManager.LookAndFeelInfo[] lookAndFeelInfos = UIManager.getInstalledLookAndFeels();
         for (UIManager.LookAndFeelInfo info : lookAndFeelInfos) {
             JMenuItem menuItem = new JMenuItem(info.getName());
-            menuItem.addActionListener(new LookAndFeelActionListener(info.getClassName(), frame));
+            menuItem.addActionListener(new LookAndFeelActionListener(info.getClassName(), homeScreen.getFrame()));
             lookAndFeelMenu.add(menuItem);
         }
-
-
-        menuBar.add(lookAndFeelMenu);
-        frame.setJMenuBar(menuBar);
-
-        JTextArea textArea = new JTextArea();
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        frame.add(scrollPane, BorderLayout.CENTER);
-
-        frame.setVisible(true);
+        homeScreen.getMenuBar().add(lookAndFeelMenu);
+        homeScreen.getFrame().setVisible(true);
     }
 
     private static class LookAndFeelActionListener implements ActionListener {
