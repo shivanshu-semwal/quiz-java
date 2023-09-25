@@ -10,6 +10,9 @@ import com.shiv.app.gui.LookAndFeelManager;
 import com.shiv.app.AppConfig;
 
 public class Main {
+
+    private static HomeScreen homeScreen = null;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             createAndShowGUI();
@@ -17,7 +20,7 @@ public class Main {
     }
 
     private static void createAndShowGUI() {
-        HomeScreen homeScreen = new HomeScreen();
+        homeScreen = new HomeScreen();
         homeScreen.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         homeScreen.getFrame().setSize(400, 300);
         try {

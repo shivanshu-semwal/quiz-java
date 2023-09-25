@@ -1,8 +1,10 @@
 package com.shiv.app.dao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.bson.Document;
 import lombok.Getter;
+import com.mongodb.client.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -16,23 +18,25 @@ public class QuestionsProvider {
     @Getter
     private ArrayList<Question> questions;
 
-    private String databaseName;
-    private String collectionName;
-
     private static QuestionsProvider questionsProvider = null;
 
     private QuestionsProvider() {
-        databaseName = AppConfig.getAppConfig().getDatabaseName();
-        collectionName = AppConfig.getAppConfig().getCollectionName();
+        String databaseName = AppConfig.getAppConfig().getDatabaseName();
+        String collectionName = AppConfig.getAppConfig().getCollectionName();
 
         MongoClient mongoClient = DatabaseConnection.getDatabaseConnection().getClient();
         MongoDatabase db = mongoClient.getDatabase(databaseName);
         MongoCollection<Question> questionCollection = db.getCollection(collectionName, Question.class);
         
+        AggregateIterable<Question> result = questionCollection.aggregate(
+            Arrays.asList(
+                new Document("$sample", new Document("size", 20))
+            )
+        );
+
         questions = new ArrayList<>();
-        for (Question question : questionCollection.find()) {
+        for(Question question: result)
             this.questions.add(question);
-        }
     }
 
     public static QuestionsProvider getQuestionsProvider() {
@@ -48,6 +52,6 @@ public class QuestionsProvider {
 
     public static void main(String[] args) {
         QuestionsProvider questionsProvider = QuestionsProvider.getQuestionsProvider();
-        System.out.println(questionsProvider.getQuestions());
+        // System.out.println(questionsProvider.getQuestions());
     }
 }
