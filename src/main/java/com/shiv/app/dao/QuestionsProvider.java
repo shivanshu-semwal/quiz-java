@@ -47,7 +47,7 @@ public class QuestionsProvider {
     }
 
     public Question getQuestionNumber(Integer questionNo) {
-        return questions.get(questionNo);
+        return questions.get(questionNo - 1);
     }
 
     public static void main(String[] args) {

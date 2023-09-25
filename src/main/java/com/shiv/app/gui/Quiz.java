@@ -14,6 +14,9 @@ import com.shiv.app.util.CustomHTMLEditorKit;
 import com.shiv.app.model.Question;
 import com.shiv.app.dao.QuestionsProvider;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Quiz{
 
     @Getter
@@ -107,8 +110,10 @@ public class Quiz{
         JPanel questionsNoPanel = new JPanel();
         questionsNoPanel.setLayout(new BoxLayout(questionsNoPanel, BoxLayout.Y_AXIS));
         ButtonGroup buttonGroup = new ButtonGroup();
+        QuestionSelectListener questionSelectListener = new QuestionSelectListener();
         for (int i=1; i < 20; i++) {
             JRadioButton radioButton = new JRadioButton(Integer.toString(i));
+            radioButton.addActionListener(questionSelectListener);
             buttonGroup.add(radioButton);
             questionsNoPanel.add(radioButton);
         }
@@ -133,18 +138,62 @@ public class Quiz{
         c.weighty = 0.5;
         c.gridx = 1;
         c.gridy = 0;
-        c.gridwidth = 6;
         centerPanel.add(quizPanel, c);
 
+        // adding next prev buttons
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new GridBagLayout());
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton next = new JButton("Next");
+        JButton prev = new JButton("Prev");
+        buttonPanel.add(prev);
+        buttonPanel.add(next);
+        JButton submit = new JButton("Submit");
+
+        c = new GridBagConstraints();
+        c.weightx = 0.3;
+        c.weighty = 0.5;
+        c.gridx = 0;
+        c.gridy = 0;
+        controlPanel.add(submit, c);
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 0.5;
+        c.weighty = 0.5;
+        c.gridx = 1;
+        c.gridy = 0;
+        controlPanel.add(buttonPanel, c);
+        
         // frame options
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(BorderLayout.NORTH, statusPanel);
         frame.getContentPane().add(BorderLayout.CENTER, centerPanel);
+        frame.getContentPane().add(BorderLayout.SOUTH, controlPanel);
         frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void setQuestion(){}
+    class QuestionSelectListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent event){
+            JRadioButton selectedRadioButton = (JRadioButton) event.getSource();
+            Integer questionNumber = Integer.parseInt(selectedRadioButton.getText());
+            setQuestion(questionsProvider.getQuestionNumber(questionNumber));
+        }
+    }
 
+    public void setQuestion(Question q){
+        question.setText(q.getQuestion());
+        ArrayList<JButton> optionList = new ArrayList<>();
+        optionList.add(option1);
+        optionList.add(option2);
+        optionList.add(option3);
+        optionList.add(option4);
+        Collections.shuffle(optionList);
+        
+        optionList.get(1).setText(q.getAnswer());
+        optionList.get(1).setText(q.getOtherOptions().get(0));
+        optionList.get(2).setText(q.getOtherOptions().get(1));
+        optionList.get(3).setText(q.getOtherOptions().get(2));
+    }
 }
