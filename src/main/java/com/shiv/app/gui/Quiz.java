@@ -37,7 +37,10 @@ public class Quiz{
     private Integer score;
     @Getter
     private Integer counter;
-
+    @Getter
+    private JButton next;
+    @Getter
+    JButton prev ;
     private JLabel scoreLabel;
     private JLabel counterLabel;
     private QuestionsProvider questionsProvider;
@@ -47,7 +50,7 @@ public class Quiz{
         frame = new JFrame();
         menuBar = new JMenuBar();
         score = 0;
-        counter = 1;
+        counter = 0;
         scoreLabel = new JLabel("Score: " + score.toString());
         counterLabel = new JLabel("Current Question: " + counter.toString());
         question = new JTextPane();
@@ -141,14 +144,16 @@ public class Quiz{
         centerPanel.add(quizPanel, c);
 
         // adding next prev buttons
+        NextButtonListener nextButtonListener = new NextButtonListener();
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new GridBagLayout());
         JPanel buttonPanel = new JPanel(new FlowLayout());
-        JButton next = new JButton("Next");
-        JButton prev = new JButton("Prev");
+        next = new JButton("Next");
+        prev = new JButton("Prev");
         buttonPanel.add(prev);
         buttonPanel.add(next);
         JButton submit = new JButton("Submit");
+        next.addActionListener(nextButtonListener);
 
         c = new GridBagConstraints();
         c.weightx = 0.3;
@@ -178,11 +183,25 @@ public class Quiz{
         public void actionPerformed(ActionEvent event){
             JRadioButton selectedRadioButton = (JRadioButton) event.getSource();
             Integer questionNumber = Integer.parseInt(selectedRadioButton.getText());
-            setQuestion(questionsProvider.getQuestionNumber(questionNumber));
+            // setQuestion(questionsProvider.getQuestionNumber(questionNumber));
+            setQuestion(questionNumber);
         }
     }
 
-    public void setQuestion(Question q){
+    class NextButtonListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent event){
+            counter++;
+            if(counter<20){
+                setQuestion(counter);
+            }
+        }
+    }
+
+    public void setQuestion(Integer questionNumber){
+        counter = questionNumber;
+        counterLabel.setText("Current Question: " + counter.toString());
+        Question q = questionsProvider.getQuestionNumber(questionNumber);
         question.setText(q.getQuestion());
         ArrayList<JButton> optionList = new ArrayList<>();
         optionList.add(option1);
@@ -191,7 +210,7 @@ public class Quiz{
         optionList.add(option4);
         Collections.shuffle(optionList);
         
-        optionList.get(1).setText(q.getAnswer());
+        optionList.get(0).setText(q.getAnswer());
         optionList.get(1).setText(q.getOtherOptions().get(0));
         optionList.get(2).setText(q.getOtherOptions().get(1));
         optionList.get(3).setText(q.getOtherOptions().get(2));
