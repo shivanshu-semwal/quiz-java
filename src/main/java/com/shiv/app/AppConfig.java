@@ -26,7 +26,7 @@ public class AppConfig{
     private static AppConfig appConfig = null;
 
     private AppConfig(){
-        mongodbUri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.5";
+        mongodbUri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1";
         databaseName = "local";
         collectionName = "quiz";
         totalQuestions = 20;
