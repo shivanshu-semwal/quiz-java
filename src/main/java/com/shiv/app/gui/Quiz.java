@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import com.shiv.app.util.CustomHTMLEditorKit;
 import com.shiv.app.model.Question;
+import com.shiv.app.AppConfig;
 import com.shiv.app.dao.QuestionsProvider;
 
 import java.util.ArrayList;
@@ -40,12 +41,14 @@ public class Quiz{
     @Getter
     private JButton next;
     @Getter
-    JButton prev ;
+    private JButton prev ;
+    private Integer totalQuestiions;
     private JLabel scoreLabel;
     private JLabel counterLabel;
     private QuestionsProvider questionsProvider;
 
     public Quiz(){
+        totalQuestiions = AppConfig.getAppConfig().getTotalQuestions();
         questionsProvider = QuestionsProvider.getQuestionsProvider();
         frame = new JFrame();
         menuBar = new JMenuBar();
@@ -67,6 +70,7 @@ public class Quiz{
         option2 = new JButton("Option 2");
         option3 = new JButton("Option 3");
         option4 = new JButton("Option 4");
+        totalQuestiions = AppConfig.getAppConfig().getTotalQuestions();
         go();
     }
 
@@ -114,7 +118,7 @@ public class Quiz{
         questionsNoPanel.setLayout(new BoxLayout(questionsNoPanel, BoxLayout.Y_AXIS));
         ButtonGroup buttonGroup = new ButtonGroup();
         QuestionSelectListener questionSelectListener = new QuestionSelectListener();
-        for (int i=1; i < 20; i++) {
+        for (int i=1; i < totalQuestiions; i++) {
             JRadioButton radioButton = new JRadioButton(Integer.toString(i));
             radioButton.addActionListener(questionSelectListener);
             buttonGroup.add(radioButton);
@@ -193,7 +197,7 @@ public class Quiz{
     class NextButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent event){
-            if(counter+1<20){
+            if(counter+1<totalQuestiions){
                 counter++;
                 setQuestion(counter);
             }
