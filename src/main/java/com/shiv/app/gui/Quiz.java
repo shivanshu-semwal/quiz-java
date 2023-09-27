@@ -193,8 +193,8 @@ public class Quiz{
     class NextButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent event){
-            counter++;
-            if(counter<20){
+            if(counter+1<20){
+                counter++;
                 setQuestion(counter);
             }
         }
@@ -203,8 +203,8 @@ public class Quiz{
     class PreviousButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event){
-            counter--;
-            if(counter>0){
+            if(counter-1>0){
+                counter--;
                 setQuestion(counter);
             }
         }
