@@ -145,6 +145,7 @@ public class Quiz{
 
         // adding next prev buttons
         NextButtonListener nextButtonListener = new NextButtonListener();
+        PreviousButtonListener previousButtonListener = new PreviousButtonListener();
         JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new GridBagLayout());
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -154,6 +155,7 @@ public class Quiz{
         buttonPanel.add(next);
         JButton submit = new JButton("Submit");
         next.addActionListener(nextButtonListener);
+        prev.addActionListener(previousButtonListener);
 
         c = new GridBagConstraints();
         c.weightx = 0.3;
@@ -191,8 +193,18 @@ public class Quiz{
     class NextButtonListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent event){
-            counter++;
-            if(counter<20){
+            if(counter+1<20){
+                counter++;
+                setQuestion(counter);
+            }
+        }
+    }
+
+    class PreviousButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent event){
+            if(counter-1>0){
+                counter--;
                 setQuestion(counter);
             }
         }
