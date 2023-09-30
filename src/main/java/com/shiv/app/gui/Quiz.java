@@ -11,6 +11,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import com.shiv.app.util.CustomHTMLEditorKit;
+import com.shiv.app.util.OrderProvider;
+
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType.Array;
+
 import com.shiv.app.model.Question;
 import com.shiv.app.AppConfig;
 import com.shiv.app.dao.QuestionsProvider;
@@ -18,7 +22,7 @@ import com.shiv.app.dao.QuestionsProvider;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Quiz{
+public class Quiz {
 
     @Getter
     private JFrame frame;
@@ -41,13 +45,18 @@ public class Quiz{
     @Getter
     private JButton next;
     @Getter
-    private JButton prev ;
+    private JButton prev;
+    @Getter
+    private ArrayList<JRadioButton> jRadioButtons;
     private JLabel scoreLabel;
     private JLabel counterLabel;
     private QuestionsProvider questionsProvider;
+    private OrderProvider orderProvider;
+    private ArrayList<ArrayList<Integer>> combinations;
 
-    public Quiz(){
+    public Quiz() {
         questionsProvider = QuestionsProvider.getQuestionsProvider();
+        orderProvider = OrderProvider.getOrderProvider(); 
         frame = new JFrame();
         menuBar = new JMenuBar();
         score = 0;
@@ -63,15 +72,17 @@ public class Quiz{
         question.setEditable(false);
         question.setFocusable(false);
         question.setContentType("text/html");
-        question.setText("Sample Question!" );
-        option1 = new JButton("Option 1");
-        option2 = new JButton("Option 2");
-        option3 = new JButton("Option 3");
-        option4 = new JButton("Option 4");
+        question.setText("Sample Question!");
+
+        jRadioButtons = new ArrayList<JRadioButton>(AppConfig.getAppConfig().getOptionSize());
+        for (Integer i = 0; i < AppConfig.getAppConfig().getOptionSize(); i++) {
+            jRadioButtons.add(i, new JRadioButton("option" + i));
+            jRadioButtons.get(i).setActionCommand((i.toString()));
+        }
         go();
     }
 
-    public void go(){
+    public void go() {
         // menubar options
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open");
@@ -99,10 +110,9 @@ public class Quiz{
         JPanel optionsPanel = new JPanel();
         optionsPanel.setLayout(new GridLayout(2, 2));
         optionsPanel.setBorder(BorderFactory.createTitledBorder("Options"));
-        optionsPanel.add(option1);
-        optionsPanel.add(option2);
-        optionsPanel.add(option3);
-        optionsPanel.add(option4);
+        for (JRadioButton i : jRadioButtons) {
+            optionsPanel.add(i);
+        }
 
         // make a container for question and options
         JPanel quizPanel = new JPanel();
@@ -115,7 +125,7 @@ public class Quiz{
         questionsNoPanel.setLayout(new BoxLayout(questionsNoPanel, BoxLayout.Y_AXIS));
         ButtonGroup buttonGroup = new ButtonGroup();
         QuestionSelectListener questionSelectListener = new QuestionSelectListener();
-        for (int i=1; i < AppConfig.getAppConfig().getTotalQuestions(); i++) {
+        for (int i = 1; i < AppConfig.getAppConfig().getTotalQuestions(); i++) {
             JRadioButton radioButton = new JRadioButton(Integer.toString(i));
             radioButton.addActionListener(questionSelectListener);
             buttonGroup.add(radioButton);
@@ -127,7 +137,7 @@ public class Quiz{
         // middle panel
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridBagLayout());
-        
+
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 0.3;
@@ -170,7 +180,9 @@ public class Quiz{
         c.gridx = 1;
         c.gridy = 0;
         controlPanel.add(buttonPanel, c);
-        
+
+        //get option order
+        combinations = orderProvider.getOrder();
         // frame options
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
@@ -181,9 +193,9 @@ public class Quiz{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    class QuestionSelectListener implements ActionListener{
+    class QuestionSelectListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent event){
+        public void actionPerformed(ActionEvent event) {
             JRadioButton selectedRadioButton = (JRadioButton) event.getSource();
             Integer questionNumber = Integer.parseInt(selectedRadioButton.getText());
             // setQuestion(questionsProvider.getQuestionNumber(questionNumber));
@@ -191,10 +203,10 @@ public class Quiz{
         }
     }
 
-    class NextButtonListener implements ActionListener{
+    class NextButtonListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent event){
-            if(counter+1<AppConfig.getAppConfig().getTotalQuestions()){
+        public void actionPerformed(ActionEvent event) {
+            if (counter + 1 < AppConfig.getAppConfig().getTotalQuestions()) {
                 counter++;
                 setQuestion(counter);
             }
@@ -203,29 +215,23 @@ public class Quiz{
 
     class PreviousButtonListener implements ActionListener {
         @Override
-        public void actionPerformed(ActionEvent event){
-            if(counter-1>0){
+        public void actionPerformed(ActionEvent event) {
+            if (counter - 1 > 0) {
                 counter--;
                 setQuestion(counter);
             }
         }
     }
 
-    public void setQuestion(Integer questionNumber){
+    public void setQuestion(Integer questionNumber) {
         counter = questionNumber;
         counterLabel.setText("Current Question: " + counter.toString());
         Question q = questionsProvider.getQuestionNumber(questionNumber);
+        ArrayList<Integer> index = combinations.get(questionNumber);
         question.setText(q.getQuestion());
-        ArrayList<JButton> optionList = new ArrayList<>();
-        optionList.add(option1);
-        optionList.add(option2);
-        optionList.add(option3);
-        optionList.add(option4);
-        Collections.shuffle(optionList);
-        
-        optionList.get(0).setText(q.getAnswer());
-        optionList.get(1).setText(q.getOtherOptions().get(0));
-        optionList.get(2).setText(q.getOtherOptions().get(1));
-        optionList.get(3).setText(q.getOtherOptions().get(2));
+        jRadioButtons.get(index.get(0)).setText(q.getAnswer());
+        jRadioButtons.get(index.get(1)).setText(q.getOtherOptions().get(0));
+        jRadioButtons.get(index.get(2)).setText(q.getOtherOptions().get(1));
+        jRadioButtons.get(index.get(3)).setText(q.getOtherOptions().get(2));
     }
 }
