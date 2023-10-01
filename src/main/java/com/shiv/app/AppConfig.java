@@ -22,14 +22,17 @@ public class AppConfig{
     private String lookAndFeel;
     @Getter
     private Integer totalQuestions;
+    @Getter
+    private Integer optionSize;
 
     private static AppConfig appConfig = null;
 
     private AppConfig(){
-        mongodbUri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1";
+        mongodbUri = "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.10.5";
         databaseName = "local";
         collectionName = "quiz";
         totalQuestions = 20;
+        optionSize = 4;
         lookAndFeel = UIManager.getSystemLookAndFeelClassName();
         System.out.println(lookAndFeel);
     }
