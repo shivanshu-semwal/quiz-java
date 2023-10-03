@@ -2,9 +2,8 @@ package com.shiv.app.gui;
 
 import javax.swing.*;
 import java.awt.event.*;
-import javax.swing.UIManager;
 import java.awt.*;
-import javax.swing.BorderFactory;
+
 import javax.swing.border.TitledBorder;
 
 import lombok.Getter;
@@ -12,6 +11,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import com.shiv.app.dao.QuestionsProvider;
 import com.shiv.app.gui.OptionComponent;
@@ -29,9 +29,11 @@ public class QuizComponent{
 
     private QuestionsProvider questionsProvider;
 
+    private OrderProvider orderProvider;
+
     QuizComponent(){
         questionsProvider = QuestionsProvider.getQuestionsProvider();
-
+        orderProvider = OrderProvider.getOrderProvider();
         question = new QuestionComponent();
         options = new ArrayList<>();
         ButtonGroup buttonGroup = new ButtonGroup();
@@ -66,10 +68,8 @@ public class QuizComponent{
         for(int i=0;i<q.getOtherOptions().size();i++){
             optionsList.add(q.getOtherOptions().get(i));
         }
-
         // shuffle options list
-        // ...
-
+        optionsList = orderProvider.shuffle(optionsList, questionNumber);
         for(int i=0;i<optionsList.size();i++){
             options.get(i).setText(optionsList.get(i));
         }

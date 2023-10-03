@@ -20,7 +20,7 @@ public class OptionComponent{
     @Getter
     JRadioButton radioButton;
     JTextPane option;
-    JScrollPane optionPane;
+    JScrollPane optionPanel;
 
     @Getter
     int number;
@@ -37,7 +37,7 @@ public class OptionComponent{
         option.setContentType("text/html");
         option.setText(optionText);
 
-        optionPane = new JScrollPane(option);
+        optionPanel = new JScrollPane(option);
 
         radioButton = new JRadioButton();
 
@@ -46,7 +46,7 @@ public class OptionComponent{
         panel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
         panel.add(radioButton);
-        panel.add(optionPane);
+        panel.add(optionPanel);
     }
 
     public void setText(String text){
