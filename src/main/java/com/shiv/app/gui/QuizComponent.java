@@ -2,9 +2,8 @@ package com.shiv.app.gui;
 
 import javax.swing.*;
 import java.awt.event.*;
-import javax.swing.UIManager;
 import java.awt.*;
-import javax.swing.BorderFactory;
+
 import javax.swing.border.TitledBorder;
 
 import lombok.Getter;
@@ -12,6 +11,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import com.shiv.app.dao.QuestionsProvider;
 import com.shiv.app.gui.OptionComponent;
@@ -29,11 +29,13 @@ public class QuizComponent{
 
     private QuestionsProvider questionsProvider;
 
+    private HashMap<Integer, ArrayList<String>> optionOrder;
+
     QuizComponent(){
         questionsProvider = QuestionsProvider.getQuestionsProvider();
-
         question = new QuestionComponent();
         options = new ArrayList<>();
+        optionOrder = new HashMap<>();
         ButtonGroup buttonGroup = new ButtonGroup();
         for(int i=0;i<4;i++){
             OptionComponent option = new OptionComponent(i, Integer.toString(i));
@@ -66,12 +68,15 @@ public class QuizComponent{
         for(int i=0;i<q.getOtherOptions().size();i++){
             optionsList.add(q.getOtherOptions().get(i));
         }
-
         // shuffle options list
-        // ...
-
-        for(int i=0;i<optionsList.size();i++){
-            options.get(i).setText(optionsList.get(i));
+        if(!optionOrder.containsKey(questionNumber)){
+            Collections.shuffle(optionsList);
+            optionOrder.put(questionNumber, optionsList);
+        }
+        ArrayList<String> shuffeList = new ArrayList<>();
+        shuffeList = optionOrder.get(questionNumber);
+        for(int i=0;i<shuffeList.size();i++){
+            options.get(i).setText(shuffeList.get(i));
         }
     }
 }
