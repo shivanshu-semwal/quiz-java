@@ -29,13 +29,13 @@ public class QuizComponent{
 
     private QuestionsProvider questionsProvider;
 
-    private HashMap<Integer, ArrayList<String>> optionOrder;
+    private OrderProvider orderProvider;
 
     QuizComponent(){
         questionsProvider = QuestionsProvider.getQuestionsProvider();
+        orderProvider = OrderProvider.getOrderProvider();
         question = new QuestionComponent();
         options = new ArrayList<>();
-        optionOrder = new HashMap<>();
         ButtonGroup buttonGroup = new ButtonGroup();
         for(int i=0;i<4;i++){
             OptionComponent option = new OptionComponent(i, Integer.toString(i));
@@ -69,14 +69,9 @@ public class QuizComponent{
             optionsList.add(q.getOtherOptions().get(i));
         }
         // shuffle options list
-        if(!optionOrder.containsKey(questionNumber)){
-            Collections.shuffle(optionsList);
-            optionOrder.put(questionNumber, optionsList);
-        }
-        ArrayList<String> shuffeList = new ArrayList<>();
-        shuffeList = optionOrder.get(questionNumber);
-        for(int i=0;i<shuffeList.size();i++){
-            options.get(i).setText(shuffeList.get(i));
+        optionsList = orderProvider.shuffle(optionsList, questionNumber);
+        for(int i=0;i<optionsList.size();i++){
+            options.get(i).setText(optionsList.get(i));
         }
     }
 }
