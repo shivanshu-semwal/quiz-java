@@ -44,17 +44,11 @@ public class Quiz {
 
     public Quiz() {
         frame = new JFrame();
-        menuBar = new JMenuBar();
-        score = 0;
-        counter = 0;
-        scoreLabel = new JLabel("Score: " + score.toString());
-        counterLabel = new JLabel("Current Question: " + counter.toString());
-        quizComponent = new QuizComponent();
-        questionListComponent = new QuestionListComponent();
         initComponents();
     }
 
     public void initMenuBar(){
+        menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open");
         JMenuItem saveMenuItem = new JMenuItem("Save");
@@ -64,16 +58,21 @@ public class Quiz {
     }
 
     public void initStatusPanel(){
+        counter = 0;
+        counterLabel = new JLabel(counter.toString());
+
         statusPanel = new JPanel();
         statusPanel.setLayout(new FlowLayout());
         statusPanel.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         statusPanel.setBorder(BorderFactory.createTitledBorder("Status"));
-        statusPanel.add(scoreLabel);
-        statusPanel.add(new JLabel("/"));
+        statusPanel.add(new JLabel("Current Question: "));
         statusPanel.add(counterLabel);
     }
 
     public void initCenterPanel(){
+        quizComponent = new QuizComponent();
+        questionListComponent = new QuestionListComponent();
+
         questionListComponent.setActionListener(new QuestionSelectListener());
 
         centerPanel = new JPanel();
@@ -141,7 +140,6 @@ public class Quiz {
     class QuestionSelectListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
-            System.out.println("hi this is listener!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             JRadioButton selectedRadioButton = (JRadioButton) event.getSource();
             Integer questionNumber = Integer.parseInt(selectedRadioButton.getText());
             setQuestion(questionNumber);
@@ -172,7 +170,7 @@ public class Quiz {
 
     public void setQuestion(Integer questionNumber) {
         counter = questionNumber;
-        counterLabel.setText("Current Question: " + counter.toString());
+        counterLabel.setText(counter.toString());
         quizComponent.setQuestion(questionNumber);
     }
 }

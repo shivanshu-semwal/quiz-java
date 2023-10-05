@@ -17,6 +17,7 @@ import com.shiv.app.dao.QuestionsProvider;
 import com.shiv.app.gui.OptionComponent;
 import com.shiv.app.gui.QuestionComponent;
 import com.shiv.app.model.Question;
+import com.shiv.app.util.OrderProvider;
 
 public class QuizComponent{
 
@@ -69,7 +70,7 @@ public class QuizComponent{
             optionsList.add(q.getOtherOptions().get(i));
         }
         // shuffle options list
-        optionsList = orderProvider.shuffle(optionsList, questionNumber);
+        orderProvider.shuffle(optionsList, questionNumber);
         for(int i=0;i<optionsList.size();i++){
             options.get(i).setText(optionsList.get(i));
         }

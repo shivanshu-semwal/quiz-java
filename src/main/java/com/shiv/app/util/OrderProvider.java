@@ -2,36 +2,29 @@ package com.shiv.app.util;
 
 import java.util.*;
 
-import com.shiv.app.AppConfig;
-
 public class OrderProvider {
-    
-    private static OrderProvider orderProvider = null;
+    public static OrderProvider orderProvider = null;
+    private HashMap<Integer,ArrayList<Integer>> optionOrder;
+
+    private OrderProvider(){
+        optionOrder = new HashMap<>( );
+    }
 
     public static OrderProvider getOrderProvider(){
-        if(orderProvider == null){
+        if(orderProvider==null){
             orderProvider = new OrderProvider();
         }
         return orderProvider;
     }
-    public ArrayList<ArrayList<Integer>> getOrder() {
-        ArrayList<Integer> optionIndex = new ArrayList<>();
-        ArrayList<ArrayList<Integer>> combinations = new ArrayList<>();
-        for (int i = 0; i < AppConfig.getAppConfig().getOptionSize(); i++) {
-            optionIndex.add(i);
+    public void shuffle(ArrayList<String> optionsList, Integer questionNumber){
+        ArrayList<Integer> order = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
+        if(!optionOrder.containsKey(questionNumber)){
+            Collections.shuffle(order);
+            optionOrder.put(questionNumber, order);
         }
-
-        for (int i = 0; i < AppConfig.getAppConfig().getTotalQuestions(); i++) {
-            Collections.shuffle(optionIndex);
-            combinations.add(optionIndex);
+        ArrayList<String> tempStorage = (ArrayList) optionsList.clone();
+        for(int i=0;i<order.size(); i++){
+            optionsList.set(i, tempStorage.get(order.get(i)));
         }
-
-        return combinations;
     }
-
-    // public static void main(String[] args) {
-    //     OrderProvider orderProvider = OrderProvider.getOrderProvider();
-    //     System.out.println(orderProvider.getOrder());
-
-    // }
 }
