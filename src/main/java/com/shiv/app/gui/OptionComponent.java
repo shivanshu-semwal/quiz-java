@@ -22,12 +22,7 @@ public class OptionComponent{
     JTextPane option;
     JScrollPane optionPanel;
 
-    @Getter
-    int number;
-
     public OptionComponent(int number, String optionText){
-        this.number = number;
-
         option = new JTextPane();
         option.setEditorKit(new CustomHTMLEditorKit());
         option.setOpaque(false);
@@ -40,6 +35,7 @@ public class OptionComponent{
         optionPanel = new JScrollPane(option);
 
         radioButton = new JRadioButton();
+        radioButton.setName(Integer.toString(number));
 
         panel = new JPanel();
         panel.setLayout(new FlowLayout());
@@ -51,5 +47,13 @@ public class OptionComponent{
 
     public void setText(String text){
         option.setText(text);
+    }
+
+    public void setActionListener(ActionListener listener){
+        radioButton.addActionListener(listener);
+    }
+
+    public void setSelected(boolean flag){
+        radioButton.setSelected(flag);
     }
 }

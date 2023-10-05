@@ -23,26 +23,35 @@ public class QuizComponent{
 
     @Getter
     JPanel panel;
-    @Getter
     private QuestionComponent question;
-    @Getter
     private ArrayList<OptionComponent> options;
-
     private QuestionsProvider questionsProvider;
-
+    private int totalOptions;
     private OrderProvider orderProvider;
 
+    public static final int OFF_OPTION = 4;
+
     QuizComponent(){
+        totalOptions = 4;
+
         questionsProvider = QuestionsProvider.getQuestionsProvider();
         orderProvider = OrderProvider.getOrderProvider();
         question = new QuestionComponent();
         options = new ArrayList<>();
         ButtonGroup buttonGroup = new ButtonGroup();
-        for(int i=0;i<4;i++){
+        for(int i=0;i<totalOptions;i++){
             OptionComponent option = new OptionComponent(i, Integer.toString(i));
             buttonGroup.add(option.getRadioButton());
             options.add(option);
         }
+
+        // add off option, but don't display it
+        {
+            OptionComponent option = new OptionComponent(OFF_OPTION, Integer.toString(OFF_OPTION));
+            options.add(option);
+            buttonGroup.add(option.getRadioButton());
+        }
+
         panel = new JPanel();
         go();
     }
@@ -51,17 +60,14 @@ public class QuizComponent{
         JPanel optionsPanel = new JPanel();
         optionsPanel.setLayout(new GridLayout(2, 2));
         optionsPanel.setBorder(BorderFactory.createTitledBorder("Options"));
-        for (OptionComponent option : options) {
-            optionsPanel.add(option.getPanel());
-        }
+        for (int i=0;i<totalOptions; i++) optionsPanel.add(options.get(i).getPanel());
         panel.setLayout(new GridLayout(0, 1));
         panel.add(question.getContainer());
         panel.add(optionsPanel);
     }
 
-    public void setQuestion(Integer questionNumber) {
+    public void setQuestion(Integer questionNumber, Integer optionNumber) {
         Question q = questionsProvider.getQuestionNumber(questionNumber);
-    
         question.setText(q.getQuestion());
 
         ArrayList<String> optionsList = new ArrayList<>();
@@ -73,6 +79,18 @@ public class QuizComponent{
         orderProvider.shuffle(optionsList, questionNumber);
         for(int i=0;i<optionsList.size();i++){
             options.get(i).setText(optionsList.get(i));
+            if(i == optionNumber) {
+                options.get(i).setSelected(true);
+            }
+        }
+        if(optionNumber == OFF_OPTION){
+            options.get(OFF_OPTION).setSelected(true);
+        }
+    }
+
+    public void setActionListener(ActionListener listener){
+        for (int i = 0; i < totalOptions; i++) {
+            options.get(i).setActionListener(listener);
         }
     }
 }

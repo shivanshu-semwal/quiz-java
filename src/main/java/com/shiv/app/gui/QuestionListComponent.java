@@ -41,19 +41,10 @@ public class QuestionListComponent{
     }
 
     public void setActionListener(ActionListener listener){
-        for (int i = 1; i < buttons.size(); i++) {
-            buttons.get(i).addActionListener(listener);
-        }
+        for (JRadioButton button: buttons) button.addActionListener(listener);
     }
 
     public void setQuestion(int questionNumber){
-        buttons.get(questionNumber - 1).setSelected(true);
-    }
-
-    class QuestionSelectListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            System.out.println("hi this is listener!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
+        buttons.get(questionNumber).setSelected(true);
     }
 }

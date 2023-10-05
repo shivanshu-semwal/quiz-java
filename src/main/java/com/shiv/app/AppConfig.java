@@ -34,7 +34,6 @@ public class AppConfig{
         totalQuestions = 20;
         optionSize = 4;
         lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-        System.out.println(lookAndFeel);
     }
 
     public static AppConfig getAppConfig(){

@@ -47,7 +47,6 @@ public class DatabaseConnection {
 
         try {
             this.mongoClient = MongoClients.create(clientSettings);
-            System.out.println("DatabaseConnection.DatabaseConnection()");
         } finally {
         }
     }
