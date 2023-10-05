@@ -46,7 +46,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get.outputs.upload_url }} 
-        asset_path: solver/target/quiz-1.0-SNAPSHOT.jar
+        asset_path: quiz-java/target/quiz-1.0-SNAPSHOT.jar
         asset_name: quiz-app.jar
         asset_content_type: application/java-archive
             
