@@ -30,7 +30,7 @@ public class QuestionsProvider {
         
         AggregateIterable<Question> result = questionCollection.aggregate(
             Arrays.asList(
-                new Document("$sample", new Document("size", 20))
+                new Document("$sample", new Document("size", AppConfig.getAppConfig().getTotalQuestions()))
             )
         );
 
@@ -47,11 +47,10 @@ public class QuestionsProvider {
     }
 
     public Question getQuestionNumber(Integer questionNo) {
-        return questions.get(questionNo - 1);
+        return questions.get(questionNo);
     }
 
     public static void main(String[] args) {
         QuestionsProvider questionsProvider = QuestionsProvider.getQuestionsProvider();
-        // System.out.println(questionsProvider.getQuestions());
     }
 }

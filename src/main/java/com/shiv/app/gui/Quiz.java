@@ -42,8 +42,13 @@ public class Quiz {
     private QuizComponent quizComponent;
     private QuestionListComponent questionListComponent;
 
+    private ArrayList<Integer> selectedOption;
+
     public Quiz() {
         frame = new JFrame();
+        selectedOption = new ArrayList<Integer>();
+        for(int i=0;i<AppConfig.getAppConfig().getTotalQuestions(); i++)
+            selectedOption.add(QuizComponent.OFF_OPTION);
         initComponents();
     }
 
@@ -71,6 +76,7 @@ public class Quiz {
 
     public void initCenterPanel(){
         quizComponent = new QuizComponent();
+        quizComponent.setActionListener(new OptionButtonListener());
         questionListComponent = new QuestionListComponent();
 
         questionListComponent.setActionListener(new QuestionSelectListener());
@@ -134,14 +140,21 @@ public class Quiz {
         frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        setQuestion(1);
+        setQuestion(0);
+    }
+
+    public void setQuestion(Integer questionNumber) {
+        counter = questionNumber; // change counter
+        counterLabel.setText(Integer.toString(counter + 1)); // set label
+        questionListComponent.setQuestion(counter); // set it in sidebar too
+        quizComponent.setQuestion(questionNumber, selectedOption.get(counter)); // change question with option
     }
 
     class QuestionSelectListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
             JRadioButton selectedRadioButton = (JRadioButton) event.getSource();
-            Integer questionNumber = Integer.parseInt(selectedRadioButton.getText());
+            Integer questionNumber = Integer.parseInt(selectedRadioButton.getText()) - 1;
             setQuestion(questionNumber);
         }
     }
@@ -149,10 +162,9 @@ public class Quiz {
     class NextButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
-            if (counter + 1 <= AppConfig.getAppConfig().getTotalQuestions()) {
+            if (counter + 1 < AppConfig.getAppConfig().getTotalQuestions()) {
                 counter++;
                 setQuestion(counter);
-                questionListComponent.setQuestion(counter);
             }
         }
     }
@@ -160,17 +172,19 @@ public class Quiz {
     class PreviousButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent event) {
-            if (counter - 1 > 0) {
+            if (counter - 1 >= 0) {
                 counter--;
                 setQuestion(counter);
-                questionListComponent.setQuestion(counter);
             }
         }
     }
 
-    public void setQuestion(Integer questionNumber) {
-        counter = questionNumber;
-        counterLabel.setText(counter.toString());
-        quizComponent.setQuestion(questionNumber);
+    class OptionButtonListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            // get option selected
+            JRadioButton selectedRadioButton = (JRadioButton) event.getSource();
+            selectedOption.set(counter, Integer.parseInt(selectedRadioButton.getName()));
+        }
     }
 }

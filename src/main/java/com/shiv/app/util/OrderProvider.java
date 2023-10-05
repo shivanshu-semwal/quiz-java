@@ -17,11 +17,13 @@ public class OrderProvider {
         return orderProvider;
     }
     public void shuffle(ArrayList<String> optionsList, Integer questionNumber){
-        ArrayList<Integer> order = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
         if(!optionOrder.containsKey(questionNumber)){
-            Collections.shuffle(order);
-            optionOrder.put(questionNumber, order);
+            ArrayList<Integer> orderTemp = new ArrayList<>(Arrays.asList(0, 1, 2, 3));
+            Collections.shuffle(orderTemp);
+            optionOrder.put(questionNumber, orderTemp);
         }
+
+        ArrayList<Integer> order = optionOrder.get(questionNumber);
         ArrayList<String> tempStorage = (ArrayList) optionsList.clone();
         for(int i=0;i<order.size(); i++){
             optionsList.set(i, tempStorage.get(order.get(i)));
